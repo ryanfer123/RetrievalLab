@@ -108,6 +108,12 @@ def compare(dataset, k=5):
         raise ValueError('k must be an integer from 1 to 20.')
     index = Index(dataset['documents'])
     result = {'k': k, 'dataset_sha256': hashlib.sha256(canonical_json(dataset).encode()).hexdigest(),
+              'configuration': {
+                  'tokenizer': 'Unicode words, casefold, no stemming or stopword removal',
+                  'bm25': {'k1': 1.5, 'b': 0.75, 'idf': 'log(1 + (N-df+0.5)/(df+0.5))'},
+                  'tfidf': {'tf': '1 + log(count)', 'idf': 'log((N+1)/(df+1)) + 1', 'similarity': 'cosine'},
+                  'relevance': 'binary', 'ties': 'document ID ascending',
+              },
               'methods': {}, 'queries': []}
     for query in dataset['queries']:
         entry = dict(query, results={})

@@ -14,4 +14,4 @@ dependencies = []
 include = ["retrieval_lab*"]
 
 [tool.setuptools.package-data]
-retrieval_lab = ["web/*"]
+retrieval_lab = ["web/*", "web/vendor/*"]

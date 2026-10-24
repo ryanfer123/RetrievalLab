@@ -79,3 +79,17 @@ class APITests(unittest.TestCase):
     def test_source_and_database_are_not_served(self):
         for path in ('/server.py','/../server.py','/test.sqlite3'):
             self.assertEqual(self.request(path)[0],404)
+
+    def test_direct_export_has_download_header(self):
+        dataset=json.loads(self.request('/api/datasets',DEMO)[1])
+        run=json.loads(self.request('/api/runs',{'dataset_id':dataset['id'],'k':3})[1])
+        connection=http.client.HTTPConnection('127.0.0.1',self.server.server_port)
+        connection.request('GET','/api/runs/'+run['id']+'?download=1')
+        response=connection.getresponse()
+        self.assertIn('attachment;',response.getheader('Content-Disposition'))
+        self.assertEqual(json.loads(response.read()),run)
+        connection.close()
+
+    def test_frontend_assets_are_served(self):
+        for path in ('/','/app.js','/motion.js','/style.css','/vendor/manrope-latin.woff2','/vendor/gsap.min.js'):
+            self.assertEqual(self.request(path)[0],200)

@@ -37,10 +37,12 @@ class Handler(SimpleHTTPRequestHandler):
         self.send_header('Content-Security-Policy', "default-src 'self'; style-src 'self'; script-src 'self'; object-src 'none'; frame-ancestors 'none'")
         super().end_headers()
 
-    def send_json(self, value, status=200):
+    def send_json(self, value, status=200, filename=None):
         body = canonical_json(value).encode()
         self.send_response(status)
         self.send_header('Content-Type', 'application/json; charset=utf-8')
+        if filename:
+            self.send_header('Content-Disposition', f'attachment; filename="{filename}"')
         self.send_header('Content-Length', str(len(body)))
         self.end_headers()
         self.wfile.write(body)
@@ -65,8 +67,9 @@ class Handler(SimpleHTTPRequestHandler):
             identifier = path.removeprefix('/api/runs/')
             with connect(self.database) as db:
                 row = db.execute('SELECT body FROM runs WHERE id=?', (identifier,)).fetchone()
-            self.send_json(json.loads(row[0]) if row else {'error': 'Run not found.'}, 200 if row else 404)
-        elif path in ('/', '/app.js', '/style.css', '/demo.json', '/favicon.svg'):
+            filename = f'retrieval-lab-{identifier}.json' if row and urlsplit(self.path).query == 'download=1' else None
+            self.send_json(json.loads(row[0]) if row else {'error': 'Run not found.'}, 200 if row else 404, filename)
+        elif path in ('/', '/app.js', '/motion.js', '/style.css', '/demo.json', '/favicon.svg') or (path.startswith('/vendor/') and Path(path).name in {p.name for p in (WEB/'vendor').iterdir()}):
             super().do_GET()
         else:
             self.send_json({'error': 'Not found.'}, 404)
