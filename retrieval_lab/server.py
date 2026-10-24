@@ -1,4 +1,5 @@
 """Loopback HTTP API and SQLite storage for RetrievalLab."""
+from contextlib import contextmanager
 from datetime import datetime, timezone
 from functools import partial
 from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
@@ -15,11 +16,16 @@ WEB = Path(__file__).parent / 'web'
 MAX_BODY = 2 * 1024 * 1024
 
 
+@contextmanager
 def connect(path):
     connection = sqlite3.connect(path)
-    connection.execute('CREATE TABLE IF NOT EXISTS datasets (id TEXT PRIMARY KEY, created TEXT, body TEXT)')
-    connection.execute('CREATE TABLE IF NOT EXISTS runs (id TEXT PRIMARY KEY, created TEXT, body TEXT)')
-    return connection
+    try:
+        with connection:
+            connection.execute('CREATE TABLE IF NOT EXISTS datasets (id TEXT PRIMARY KEY, created TEXT, body TEXT)')
+            connection.execute('CREATE TABLE IF NOT EXISTS runs (id TEXT PRIMARY KEY, created TEXT, body TEXT)')
+            yield connection
+    finally:
+        connection.close()
 
 
 def now():

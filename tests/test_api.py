@@ -5,7 +5,7 @@ import tempfile
 import threading
 import unittest
 
-from retrieval_lab.server import make_server
+from retrieval_lab.server import make_server, connect
 from retrieval_lab.engine import validate_dataset
 
 DEMO = json.loads((Path(__file__).parents[1]/'retrieval_lab/web/demo.json').read_text())
@@ -93,3 +93,10 @@ class APITests(unittest.TestCase):
     def test_frontend_assets_are_served(self):
         for path in ('/','/app.js','/motion.js','/style.css','/vendor/manrope-latin.woff2','/vendor/gsap.min.js'):
             self.assertEqual(self.request(path)[0],200)
+
+    def test_database_connection_closes_after_context(self):
+        import sqlite3
+        with connect(self.db) as connection:
+            connection.execute('SELECT 1')
+        with self.assertRaises(sqlite3.ProgrammingError):
+            connection.execute('SELECT 1')

@@ -4,7 +4,7 @@ Verified locally on macOS, 24 October 2026.
 
 | Check | Result |
 | --- | --- |
-| Python engine and real HTTP/SQLite integration tests | 20 passed |
+| Python engine and real HTTP/SQLite integration tests | 21 passed |
 | Installable wheel | Built successfully; complete browser assets verified in archive |
 | Authored JavaScript syntax | `node --check` passed for app.js and motion.js |
 | Desktop browser | 1470 px viewport; app loads, comparison runs and query switching updates both lists |
