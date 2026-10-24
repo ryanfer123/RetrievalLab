@@ -1,0 +1,22 @@
+{
+  "name": "Field notes · demo corpus",
+  "documents": [
+    {"id":"can-protocol","text":"The CAN telemetry protocol sends throttle variation and brake usage in frame 0x300. Frame 0x301 carries energy consumption in Wh/km and regeneration efficiency. Frame 0x302 carries jerk."},
+    {"id":"battery-health","text":"Battery health estimation uses internal resistance, cycle count, depth of discharge, cell imbalance and coulombic efficiency. Training labels are synthetic."},
+    {"id":"graph-retrieval","text":"Graph retrieval starts with vector search seeds and follows graph edges for two hops. Document scoped retrieval filters seeds and all neighboring nodes by document ID."},
+    {"id":"image-failure","text":"When image description generation fails, return an unavailable message. Do not insert invented chart values into retrieved evidence."},
+    {"id":"eval-metrics","text":"Retrieval evaluation uses relevance judgments. Precision counts relevant results among the requested k positions. Recall measures how many relevant documents were found. Reciprocal rank rewards an early first hit."},
+    {"id":"corpus-hash","text":"A reproducible experiment records a SHA256 hash of the corpus and relevance judgments. Export the dataset, parameters, software version and results together."},
+    {"id":"food-claims","text":"Food redistribution reservations use database transactions to prevent duplicate claims. Listings expire according to pickup deadlines and local zone rules."},
+    {"id":"wifi-monitor","text":"A network monitor tracks WiFi signal, packet loss, latency and data usage. Captive portal authentication is separate from connection quality measurement."},
+    {"id":"ranking-baselines","text":"BM25 ranks lexical document matches using term frequency saturation and document length normalization. TF-IDF cosine ranking normalizes document vectors and query vectors."},
+    {"id":"model-export","text":"Embedded model export converts trained Random Forest classifiers to C++ headers. Verify feature ordering and units against the training CSV before running inference."}
+  ],
+  "queries": [
+    {"id":"q1","text":"CAN driver feature units","relevant_ids":["can-protocol","model-export"]},
+    {"id":"q2","text":"document scoped graph retrieval","relevant_ids":["graph-retrieval"]},
+    {"id":"q3","text":"reproducible retrieval evaluation experiment","relevant_ids":["eval-metrics","corpus-hash"]},
+    {"id":"q4","text":"image chart values generation fails","relevant_ids":["image-failure"]},
+    {"id":"q5","text":"ranking document length normalization","relevant_ids":["ranking-baselines"]}
+  ]
+}
