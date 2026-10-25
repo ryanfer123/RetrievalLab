@@ -94,6 +94,36 @@ class APITests(unittest.TestCase):
         for path in ('/','/app.js','/motion.js','/style.css','/vendor/manrope-latin.woff2','/vendor/gsap.min.js'):
             self.assertEqual(self.request(path)[0],200)
 
+    def test_homepage_workspace_routes_and_cloud_config(self):
+        for path in ('/', '/workspace', '/workspace/', '/workspace.html', '/cloud.js', '/cloud.css', '/home.js', '/home.css', '/home-demo.json'):
+            status, body = self.request(path)
+            self.assertEqual(status, 200, path)
+        home = self.request('/')[1].decode()
+        workspace = self.request('/workspace')[1].decode()
+        self.assertIn('/home.js', home)
+        self.assertNotIn('src="/app.js"', home)
+        self.assertIn('src="/app.js"', workspace)
+        self.assertIn('src="/cloud.js"', workspace)
+        self.assertNotIn('src="/hosted.js"', workspace)
+        config = json.loads(self.request('/api/cloud/config')[1])
+        self.assertFalse(config['hosted'])
+        self.assertNotIn('service_role', json.dumps(config))
+        for private in ('/cloud.config.json', '/.env', '/cloud.py'):
+            self.assertEqual(self.request(private)[0], 404)
+
+    def test_cloud_restore_revalidates_and_recomputes_untrusted_results(self):
+        dataset = json.loads(self.request('/api/datasets', DEMO)[1])
+        original = json.loads(self.request('/api/runs', {'dataset_id': dataset['id'], 'k': 3})[1])
+        original['results']['methods']['bm25']['ndcg'] = 12345
+        restored_dataset = json.loads(self.request('/api/datasets', original['dataset'])[1])
+        status, body = self.request('/api/runs', {'dataset_id': restored_dataset['id'], 'k': original['results']['k']})
+        self.assertEqual(status, 201)
+        restored = json.loads(body)
+        self.assertLessEqual(restored['results']['methods']['bm25']['ndcg'], 1)
+        self.assertNotEqual(restored['id'], original['id'])
+        original['dataset']['documents'] = []
+        self.assertEqual(self.request('/api/datasets', original['dataset'])[0], 400)
+
     def test_database_connection_closes_after_context(self):
         import sqlite3
         with connect(self.db) as connection:

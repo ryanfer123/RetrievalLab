@@ -1,0 +1,364 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>RetrievalLab · Retrieval workbench</title>
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link
+      rel="preload"
+      href="/vendor/manrope-latin.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
+    <link rel="stylesheet" href="/vendor/lenis.css" />
+    <link rel="stylesheet" href="/style.css" />
+    <link rel="stylesheet" href="/cloud.css" />
+    <script src="/vendor/gsap.min.js" defer></script>
+    <script src="/vendor/ScrollTrigger.min.js" defer></script>
+    <script src="/vendor/lenis.min.js" defer></script>
+    <script src="/motion.js" defer></script>
+    <script src="/cloud.js" defer></script>
+    <script src="/app.js" defer></script>
+  </head>
+  <body>
+    <noscript
+      ><div class="noscript-notice">
+        JavaScript is needed for the interactive workbench. You can still
+        evaluate a dataset with
+        <code
+          >python -m retrieval_lab --evaluate dataset.json --output
+          run.json</code
+        >.
+      </div></noscript
+    >
+    <div class="app-shell">
+      <aside class="sidebar">
+        <a class="brand" href="/" aria-label="RetrievalLab home"
+          ><span class="brand-mark">r<span>l</span></span
+          >RetrievalLab</a
+        >
+        <p class="brand-note">A workbench for finding things.</p>
+        <nav aria-label="Workspace">
+          <button class="nav-active" id="workspace-button">
+            <svg
+              class="icon"
+              aria-hidden="true"
+              viewBox="0 0 24 24"
+              fill="none"
+            >
+              <g
+                fill="none"
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-width="1.5"
+              >
+                <path
+                  d="M2.5 6.5C2.5 4.29086 4.29086 2.5 6.5 2.5C8.70914 2.5 10.5 4.29086 10.5 6.5C10.5 8.70914 8.70914 10.5 6.5 10.5C4.29086 10.5 2.5 8.70914 2.5 6.5Z"
+                />
+                <path
+                  d="M13.5 17.5C13.5 15.2909 15.2909 13.5 17.5 13.5C19.7091 13.5 21.5 15.2909 21.5 17.5C21.5 19.7091 19.7091 21.5 17.5 21.5C15.2909 21.5 13.5 19.7091 13.5 17.5Z"
+                />
+                <path
+                  d="M21.5 6.5C21.5 4.61438 21.5 3.67157 20.9142 3.08579C20.3284 2.5 19.3856 2.5 17.5 2.5C15.6144 2.5 14.6716 2.5 14.0858 3.08579C13.5 3.67157 13.5 4.61438 13.5 6.5C13.5 8.38562 13.5 9.32843 14.0858 9.91421C14.6716 10.5 15.6144 10.5 17.5 10.5C19.3856 10.5 20.3284 10.5 20.9142 9.91421C21.5 9.32843 21.5 8.38562 21.5 6.5Z"
+                />
+                <path
+                  d="M10.5 17.5C10.5 15.6144 10.5 14.6716 9.91421 14.0858C9.32843 13.5 8.38562 13.5 6.5 13.5C4.61438 13.5 3.67157 13.5 3.08579 14.0858C2.5 14.6716 2.5 15.6144 2.5 17.5C2.5 19.3856 2.5 20.3284 3.08579 20.9142C3.67157 21.5 4.61438 21.5 6.5 21.5C8.38562 21.5 9.32843 21.5 9.91421 20.9142C10.5 20.3284 10.5 19.3856 10.5 17.5Z"
+                />
+              </g>
+            </svg>
+            Comparison workspace</button
+          ><button id="import-nav">
+            <svg
+              class="icon"
+              aria-hidden="true"
+              viewBox="0 0 24 24"
+              fill="none"
+            >
+              <g
+                fill="none"
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-width="1.5"
+              >
+                <path
+                  d="M2 12C2 7.28595 2 4.92893 3.46447 3.46447C4.92893 2 7.28595 2 12 2C16.714 2 19.0711 2 20.5355 3.46447C22 4.92893 22 7.28595 22 12C22 16.714 22 19.0711 20.5355 20.5355C19.0711 22 16.714 22 12 22C7.28595 22 4.92893 22 3.46447 20.5355C2 19.0711 2 16.714 2 12Z"
+                />
+                <path d="M15 12L12 12M12 12L9 12M12 12L12 9M12 12L12 15" />
+              </g>
+            </svg>
+            Import a dataset
+          </button>
+        </nav>
+        <div class="sidebar-heading">
+          <h2>Experiment history</h2>
+          <span id="run-count">0</span>
+        </div>
+        <div id="history" class="history">
+          <p class="muted">Your saved comparisons will appear here.</p>
+        </div>
+        <div class="sidebar-footer">
+          <span class="status-dot"></span> Local workspace
+          <p>Saved on this computer. Cloud copies are optional.</p>
+          <a
+            href="https://github.com/ryanfer123/RetrievalLab"
+            target="_blank"
+            rel="noreferrer"
+            >Source & documentation ↗</a
+          >
+        </div>
+      </aside>
+      <main>
+        <header class="topbar"><button id="cloud-button" type="button">Cloud workspaces</button>
+          <span>Workspace <span class="slash">/</span> Compare retrieval</span
+          ><span class="local-badge"
+            ><span class="status-dot"></span> Python + SQLite</span
+          >
+        </header>
+        <div class="workspace">
+          <section class="hero">
+            <div class="hero-copy">
+              <div class="workbench-label">
+                <span class="live-line"></span> Your retrieval experiment studio
+              </div>
+              <h1 aria-label="Find the better match.">
+                <span aria-hidden="true" class="title-word">Find the</span
+                ><br /><span aria-hidden="true" class="title-word"
+                  >better match.</span
+                >
+              </h1>
+              <p>
+                Two retrievers. The same questions.<br />See where your search
+                gets it right.
+              </p>
+              <button class="button secondary" id="import-button">
+                Import your dataset
+                <svg
+                  class="icon"
+                  aria-hidden="true"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                >
+                  <g
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-linecap="round"
+                    stroke-width="1.5"
+                  >
+                    <path
+                      d="M2 12C2 7.28595 2 4.92893 3.46447 3.46447C4.92893 2 7.28595 2 12 2C16.714 2 19.0711 2 20.5355 3.46447C22 4.92893 22 7.28595 22 12C22 16.714 22 19.0711 20.5355 20.5355C19.0711 22 16.714 22 12 22C7.28595 22 4.92893 22 3.46447 20.5355C2 19.0711 2 16.714 2 12Z"
+                    />
+                    <path d="M15 12L12 12M12 12L9 12M12 12L12 9M12 12L12 15" />
+                  </g>
+                </svg>
+              </button>
+            </div>
+            <div class="hero-evidence">
+              <div class="evidence-heading">
+                <span class="evidence-kicker">The ranking room</span
+                ><span class="evidence-status" id="rank-status"
+                  >Ready for evidence</span
+                >
+              </div>
+              <div id="rank-map">
+                <div class="evidence-empty">
+                  <span>Corpus → Questions → Comparison</span>
+                  <p>
+                    Turn a list of documents into an experiment you can inspect.
+                  </p>
+                  <div class="evidence-baselines">
+                    <span>BM25</span><b>↔</b><span>TF-IDF</span>
+                  </div>
+                </div>
+              </div>
+              <div class="evidence-footer">
+                <span class="status-dot"></span
+                ><span id="rank-caption"
+                  >Your data. Your relevance labels.</span
+                >
+              </div>
+            </div>
+          </section>
+          <div id="notice" role="status" aria-live="polite" hidden></div>
+          <section class="experiment-config" aria-label="Experiment settings">
+            <div class="dataset-field">
+              <label for="dataset-select">Dataset</label
+              ><select id="dataset-select">
+                <option value="">Choose or import a dataset</option></select
+              ><span id="dataset-meta"
+                >Your documents and relevance judgments.</span
+              >
+            </div>
+            <div class="cutoff-field">
+              <label for="cutoff">Results per query</label
+              ><select id="cutoff">
+                <option value="3">Top 3</option>
+                <option value="5" selected>Top 5</option>
+                <option value="10">Top 10</option>
+                <option value="20">Top 20</option></select
+              ><span>Evaluation cutoff (k)</span>
+            </div>
+            <button class="button primary" id="run-button" disabled>
+              <svg
+                class="icon"
+                aria-hidden="true"
+                viewBox="0 0 24 24"
+                fill="none"
+              >
+                <g
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-linecap="round"
+                  stroke-width="1.5"
+                >
+                  <circle cx="12" cy="12" r="10" />
+                  <path
+                    d="M15.4137 10.941C16.1954 11.4026 16.1954 12.5974 15.4137 13.059L10.6935 15.8458C9.93371 16.2944 9 15.7105 9 14.7868L9 9.21316C9 8.28947 9.93371 7.70561 10.6935 8.15419L15.4137 10.941Z"
+                  />
+                </g>
+              </svg>
+              Run comparison
+            </button>
+          </section>
+          <section id="empty-state" class="empty-state">
+            <h2>Give your search a fair comparison.</h2>
+            <p>
+              Start with a small, labeled corpus. Run BM25 and TF-IDF on the
+              same questions, then see which documents each one finds.
+            </p>
+            <button class="button primary" id="demo-button">
+              Try the demo corpus</button
+            ><span class="demo-note"
+              >10 documents · 5 questions · Hand-authored labels</span
+            >
+          </section>
+          <section id="results" hidden>
+            <div class="section-heading">
+              <div>
+                <h2>Comparison overview</h2>
+                <p id="run-meta"></p>
+              </div>
+              <button class="button secondary small" id="export-button">
+                <svg
+                  class="icon"
+                  aria-hidden="true"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                >
+                  <g
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-linecap="round"
+                    stroke-width="1.5"
+                  >
+                    <path
+                      d="M17 9.00195C19.175 9.01406 20.3529 9.11051 21.1213 9.8789C22 10.7576 22 12.1718 22 15.0002V16.0002C22 18.8286 22 20.2429 21.1213 21.1215C20.2426 22.0002 18.8284 22.0002 16 22.0002H8C5.17157 22.0002 3.75736 22.0002 2.87868 21.1215C2 20.2429 2 18.8286 2 16.0002L2 15.0002C2 12.1718 2 10.7576 2.87868 9.87889C3.64706 9.11051 4.82497 9.01406 7 9.00195"
+                    />
+                    <path
+                      stroke-linejoin="round"
+                      d="M12 2L12 15M15 11.5L12 15L9 11.5"
+                    />
+                  </g></svg
+                >Export experiment
+              </button>
+            </div>
+            <div id="metric-summary" class="metric-summary"></div>
+            <p class="metric-note">
+              Averages across labeled queries. Unreturned positions count
+              against precision. Scores depend on your relevance labels.
+            </p>
+            <div class="section-heading query-heading">
+              <div>
+                <h2>Look inside a query</h2>
+                <p>Relevant documents are marked against your labels.</p>
+              </div>
+              <span class="legend"
+                ><span class="relevant-dot"></span> Relevant match</span
+              >
+            </div>
+            <div class="query-workspace">
+              <div
+                class="query-list"
+                id="query-list"
+                aria-label="Evaluation queries"
+              ></div>
+              <div class="query-detail">
+                <div id="query-description"></div>
+                <div id="rankings" class="rankings"></div>
+              </div>
+            </div>
+            <details class="method-notes">
+              <summary>How these results are calculated</summary>
+              <p>
+                BM25 uses k₁ = 1.5 and b = 0.75 with a positive IDF. TF-IDF uses
+                log term frequency, smoothed IDF, and cosine similarity. Both
+                tokenize Unicode words, fold case, and break ties by document
+                ID. Neither uses embeddings, stemming, or language models.
+              </p>
+              <p>
+                Relevance is binary. nDCG rewards relevant documents near the
+                top; reciprocal rank uses the first relevant result; recall
+                measures coverage; precision divides relevant hits by k.
+                Zero-score matches are omitted. Latency measures the search
+                call, excluding index construction, database work, and network
+                time.
+              </p>
+            </details>
+          </section>
+          <footer class="workspace-footer">
+            <span>Built for experiments you can inspect.</span
+            ><span
+              >BM25 <span class="footer-separator">/</span> TF-IDF cosine</span
+            >
+          </footer>
+        </div>
+      </main>
+    </div>
+    <dialog id="import-dialog">
+      <form id="import-form">
+        <div class="dialog-heading">
+          <h2>Import a dataset</h2>
+          <button
+            type="button"
+            class="icon-button"
+            id="close-import"
+            aria-label="Close import dialog"
+          >
+            ×
+          </button>
+        </div>
+        <p>
+          Add documents, queries, and the document IDs relevant to each query.
+          Nothing is sent to an external service.
+        </p>
+        <label class="file-label" for="dataset-file"
+          >Choose a JSON file<input
+            id="dataset-file"
+            type="file"
+            accept=".json,application/json" /></label
+        ><label for="dataset-json">Or paste dataset JSON</label
+        ><textarea
+          id="dataset-json"
+          rows="10"
+          spellcheck="false"
+          placeholder='{"name":"My corpus","documents":[{"id":"d1","text":"Battery health report"}],"queries":[{"id":"q1","text":"battery","relevant_ids":["d1"]}]}'
+        ></textarea>
+        <p class="import-help">
+          Up to 1,000 documents, 100 labeled queries, and 2 MiB per import.
+          <a href="/demo.json" download="retrieval-lab-example.json"
+            >Download an example</a
+          >.
+        </p>
+        <p id="import-error" role="alert" hidden></p>
+        <div class="dialog-actions">
+          <button type="button" class="button secondary" id="cancel-import">
+            Cancel</button
+          ><button type="submit" class="button primary" id="save-import">
+            Import dataset
+          </button>
+        </div>
+      </form>
+    </dialog>
+  </body>
+</html>

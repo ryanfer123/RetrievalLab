@@ -206,7 +206,7 @@ $("run-button").addEventListener("click", async () => {
     renderRun();
     await refresh();
     notice(
-      "Comparison saved. Inspect a query or export the complete experiment.",
+      "Comparison ready. Inspect a query, export the experiment, or save a cloud copy.",
     );
   } catch (error) {
     notice(error.message, true);
@@ -268,3 +268,21 @@ $("export-button").addEventListener("click", () => {
     notice(`Could not load the workspace: ${error.message}`, true);
   }
 })();
+
+const cloudPanel = CloudWorkspace.init({
+  kind: 'Retrieval experiment',
+  getSnapshot: async () => {
+    if (!currentRun) throw new Error('Run a comparison before saving a cloud copy.');
+    return {app: 'retrieval-lab', schema: 1, run: currentRun};
+  },
+  onLoad: async (snapshot) => {
+    if (snapshot?.app !== 'retrieval-lab' || snapshot.schema !== 1 || !snapshot.run?.dataset) throw new Error('This is not a RetrievalLab workspace.');
+    const dataset = await api('/api/datasets', snapshot.run.dataset);
+    currentRun = await api('/api/runs', {dataset_id: dataset.id, k: snapshot.run.results?.k});
+    selectedQuery = 0;
+    renderRun();
+    await refresh(dataset.id);
+    notice('Cloud experiment restored and recomputed from its dataset and labels.');
+  }
+});
+$('cloud-button').addEventListener('click', () => cloudPanel.open());

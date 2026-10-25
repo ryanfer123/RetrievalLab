@@ -9,6 +9,7 @@ import sqlite3
 from urllib.parse import urlsplit
 import uuid
 
+from .cloud import cloud_config
 from . import __version__
 from .engine import canonical_json, compare, validate_dataset
 
@@ -40,7 +41,7 @@ class Handler(SimpleHTTPRequestHandler):
     def end_headers(self):
         self.send_header('X-Content-Type-Options', 'nosniff')
         self.send_header('Cache-Control', 'no-store')
-        self.send_header('Content-Security-Policy', "default-src 'self'; style-src 'self'; script-src 'self'; object-src 'none'; frame-ancestors 'none'")
+        self.send_header('Content-Security-Policy', "default-src 'self'; style-src 'self'; script-src 'self'; connect-src 'self' https://fcibqdxdjvzuxznjebdc.supabase.co; object-src 'none'; frame-ancestors 'none'")
         super().end_headers()
 
     def send_json(self, value, status=200, filename=None):
@@ -64,7 +65,12 @@ class Handler(SimpleHTTPRequestHandler):
         if not self.valid_host():
             return
         path = urlsplit(self.path).path
-        if path == '/api/state':
+        if path == '/api/cloud/config':
+            self.send_json(dict(cloud_config(), hosted=False))
+        elif path in ('/workspace', '/workspace/'):
+            self.path = '/workspace.html'
+            super().do_GET()
+        elif path == '/api/state':
             with connect(self.database) as db:
                 datasets = [dict(json.loads(body), id=identifier, created=created) for identifier, created, body in db.execute('SELECT * FROM datasets ORDER BY created DESC')]
                 runs = [dict(id=identifier, created=created, name=json.loads(body)['dataset']['name'], k=json.loads(body)['results']['k']) for identifier, created, body in db.execute('SELECT * FROM runs ORDER BY created DESC')]
@@ -75,7 +81,7 @@ class Handler(SimpleHTTPRequestHandler):
                 row = db.execute('SELECT body FROM runs WHERE id=?', (identifier,)).fetchone()
             filename = f'retrieval-lab-{identifier}.json' if row and urlsplit(self.path).query == 'download=1' else None
             self.send_json(json.loads(row[0]) if row else {'error': 'Run not found.'}, 200 if row else 404, filename)
-        elif path in ('/', '/app.js', '/motion.js', '/style.css', '/demo.json', '/favicon.svg') or (path.startswith('/vendor/') and Path(path).name in {p.name for p in (WEB/'vendor').iterdir()}):
+        elif path in ('/', '/workspace.html', '/home.css', '/home.js', '/home-demo.json', '/cloud.js', '/cloud.css', '/app.js', '/motion.js', '/style.css', '/demo.json', '/favicon.svg') or (path.startswith('/home-assets/') and path.removeprefix('/home-assets/') in {p.name for p in (WEB/'home-assets').iterdir()}) or (path.startswith('/vendor/') and Path(path).name in {p.name for p in (WEB/'vendor').iterdir()}):
             super().do_GET()
         else:
             self.send_json({'error': 'Not found.'}, 404)

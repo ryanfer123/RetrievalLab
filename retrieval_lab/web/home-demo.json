@@ -1,0 +1,392 @@
+{
+  "kind": "Hand-authored demonstration fixture, not an external benchmark",
+  "version": "0.1.0",
+  "dataset": {
+    "name": "Field notes · demo corpus",
+    "documents": [
+      {
+        "id": "can-protocol",
+        "text": "The CAN telemetry protocol sends throttle variation and brake usage in frame 0x300. Frame 0x301 carries energy consumption in Wh/km and regeneration efficiency. Frame 0x302 carries jerk."
+      },
+      {
+        "id": "battery-health",
+        "text": "Battery health estimation uses internal resistance, cycle count, depth of discharge, cell imbalance and coulombic efficiency. Training labels are synthetic."
+      },
+      {
+        "id": "graph-retrieval",
+        "text": "Graph retrieval starts with vector search seeds and follows graph edges for two hops. Document scoped retrieval filters seeds and all neighboring nodes by document ID."
+      },
+      {
+        "id": "image-failure",
+        "text": "When image description generation fails, return an unavailable message. Do not insert invented chart values into retrieved evidence."
+      },
+      {
+        "id": "eval-metrics",
+        "text": "Retrieval evaluation uses relevance judgments. Precision counts relevant results among the requested k positions. Recall measures how many relevant documents were found. Reciprocal rank rewards an early first hit."
+      },
+      {
+        "id": "corpus-hash",
+        "text": "A reproducible experiment records a SHA256 hash of the corpus and relevance judgments. Export the dataset, parameters, software version and results together."
+      },
+      {
+        "id": "food-claims",
+        "text": "Food redistribution reservations use database transactions to prevent duplicate claims. Listings expire according to pickup deadlines and local zone rules."
+      },
+      {
+        "id": "wifi-monitor",
+        "text": "A network monitor tracks WiFi signal, packet loss, latency and data usage. Captive portal authentication is separate from connection quality measurement."
+      },
+      {
+        "id": "ranking-baselines",
+        "text": "BM25 ranks lexical document matches using term frequency saturation and document length normalization. TF-IDF cosine ranking normalizes document vectors and query vectors."
+      },
+      {
+        "id": "model-export",
+        "text": "Embedded model export converts trained Random Forest classifiers to C++ headers. Verify feature ordering and units against the training CSV before running inference."
+      }
+    ],
+    "queries": [
+      {
+        "id": "q1",
+        "text": "CAN driver feature units",
+        "relevant_ids": [
+          "can-protocol",
+          "model-export"
+        ]
+      },
+      {
+        "id": "q2",
+        "text": "document scoped graph retrieval",
+        "relevant_ids": [
+          "graph-retrieval"
+        ]
+      },
+      {
+        "id": "q3",
+        "text": "reproducible retrieval evaluation experiment",
+        "relevant_ids": [
+          "eval-metrics",
+          "corpus-hash"
+        ]
+      },
+      {
+        "id": "q4",
+        "text": "image chart values generation fails",
+        "relevant_ids": [
+          "image-failure"
+        ]
+      },
+      {
+        "id": "q5",
+        "text": "ranking document length normalization",
+        "relevant_ids": [
+          "ranking-baselines"
+        ]
+      }
+    ]
+  },
+  "results": {
+    "k": 3,
+    "dataset_sha256": "f8057ebea6999c5118a4e27ea85279c7cb99ce7393ea668fad4fe67d33f5a8d0",
+    "configuration": {
+      "tokenizer": "Unicode words, casefold, no stemming or stopword removal",
+      "bm25": {
+        "k1": 1.5,
+        "b": 0.75,
+        "idf": "log(1 + (N-df+0.5)/(df+0.5))"
+      },
+      "tfidf": {
+        "tf": "1 + log(count)",
+        "idf": "log((N+1)/(df+1)) + 1",
+        "similarity": "cosine"
+      },
+      "relevance": "binary",
+      "ties": "document ID ascending"
+    },
+    "methods": {
+      "bm25": {
+        "precision": 0.4666666666666666,
+        "recall": 1.0,
+        "mrr": 1.0,
+        "ndcg": 1.0,
+        "mean_latency_ms": 0.011557995458133519
+      },
+      "tfidf": {
+        "precision": 0.4666666666666666,
+        "recall": 1.0,
+        "mrr": 1.0,
+        "ndcg": 1.0,
+        "mean_latency_ms": 0.010674999793991446
+      }
+    },
+    "queries": [
+      {
+        "id": "q1",
+        "text": "CAN driver feature units",
+        "relevant_ids": [
+          "can-protocol",
+          "model-export"
+        ],
+        "results": {
+          "bm25": {
+            "ranking": [
+              {
+                "id": "model-export",
+                "text": "Embedded model export converts trained Random Forest classifiers to C++ headers. Verify feature ordering and units against the training CSV before running inference.",
+                "score": 3.9848603293804117
+              },
+              {
+                "id": "can-protocol",
+                "text": "The CAN telemetry protocol sends throttle variation and brake usage in frame 0x300. Frame 0x301 carries energy consumption in Wh/km and regeneration efficiency. Frame 0x302 carries jerk.",
+                "score": 1.8148868826881082
+              }
+            ],
+            "latency_ms": 0.01866600359790027,
+            "metrics": {
+              "precision": 0.6666666666666666,
+              "recall": 1.0,
+              "mrr": 1.0,
+              "ndcg": 1.0
+            }
+          },
+          "tfidf": {
+            "ranking": [
+              {
+                "id": "model-export",
+                "text": "Embedded model export converts trained Random Forest classifiers to C++ headers. Verify feature ordering and units against the training CSV before running inference.",
+                "score": 0.25317116391834493
+              },
+              {
+                "id": "can-protocol",
+                "text": "The CAN telemetry protocol sends throttle variation and brake usage in frame 0x300. Frame 0x301 carries energy consumption in Wh/km and regeneration efficiency. Frame 0x302 carries jerk.",
+                "score": 0.10798647808692848
+              }
+            ],
+            "latency_ms": 0.013791999663226306,
+            "metrics": {
+              "precision": 0.6666666666666666,
+              "recall": 1.0,
+              "mrr": 1.0,
+              "ndcg": 1.0
+            }
+          }
+        }
+      },
+      {
+        "id": "q2",
+        "text": "document scoped graph retrieval",
+        "relevant_ids": [
+          "graph-retrieval"
+        ],
+        "results": {
+          "bm25": {
+            "ranking": [
+              {
+                "id": "graph-retrieval",
+                "text": "Graph retrieval starts with vector search seeds and follows graph edges for two hops. Document scoped retrieval filters seeds and all neighboring nodes by document ID.",
+                "score": 8.676584039428874
+              },
+              {
+                "id": "ranking-baselines",
+                "text": "BM25 ranks lexical document matches using term frequency saturation and document length normalization. TF-IDF cosine ranking normalizes document vectors and query vectors.",
+                "score": 2.469340901540359
+              },
+              {
+                "id": "eval-metrics",
+                "text": "Retrieval evaluation uses relevance judgments. Precision counts relevant results among the requested k positions. Recall measures how many relevant documents were found. Reciprocal rank rewards an early first hit.",
+                "score": 1.3259495891539672
+              }
+            ],
+            "latency_ms": 0.011750002158805728,
+            "metrics": {
+              "precision": 0.3333333333333333,
+              "recall": 1.0,
+              "mrr": 1.0,
+              "ndcg": 1.0
+            }
+          },
+          "tfidf": {
+            "ranking": [
+              {
+                "id": "graph-retrieval",
+                "text": "Graph retrieval starts with vector search seeds and follows graph edges for two hops. Document scoped retrieval filters seeds and all neighboring nodes by document ID.",
+                "score": 0.5385508345744154
+              },
+              {
+                "id": "ranking-baselines",
+                "text": "BM25 ranks lexical document matches using term frequency saturation and document length normalization. TF-IDF cosine ranking normalizes document vectors and query vectors.",
+                "score": 0.1718134066531331
+              },
+              {
+                "id": "eval-metrics",
+                "text": "Retrieval evaluation uses relevance judgments. Precision counts relevant results among the requested k positions. Recall measures how many relevant documents were found. Reciprocal rank rewards an early first hit.",
+                "score": 0.07405403988534787
+              }
+            ],
+            "latency_ms": 0.010458999895490706,
+            "metrics": {
+              "precision": 0.3333333333333333,
+              "recall": 1.0,
+              "mrr": 1.0,
+              "ndcg": 1.0
+            }
+          }
+        }
+      },
+      {
+        "id": "q3",
+        "text": "reproducible retrieval evaluation experiment",
+        "relevant_ids": [
+          "corpus-hash",
+          "eval-metrics"
+        ],
+        "results": {
+          "bm25": {
+            "ranking": [
+              {
+                "id": "corpus-hash",
+                "text": "A reproducible experiment records a SHA256 hash of the corpus and relevance judgments. Export the dataset, parameters, software version and results together.",
+                "score": 4.064380823758291
+              },
+              {
+                "id": "eval-metrics",
+                "text": "Retrieval evaluation uses relevance judgments. Precision counts relevant results among the requested k positions. Recall measures how many relevant documents were found. Reciprocal rank rewards an early first hit.",
+                "score": 3.109058296853373
+              },
+              {
+                "id": "graph-retrieval",
+                "text": "Graph retrieval starts with vector search seeds and follows graph edges for two hops. Document scoped retrieval filters seeds and all neighboring nodes by document ID.",
+                "score": 2.0314101008200867
+              }
+            ],
+            "latency_ms": 0.00929099041968584,
+            "metrics": {
+              "precision": 0.6666666666666666,
+              "recall": 1.0,
+              "mrr": 1.0,
+              "ndcg": 1.0
+            }
+          },
+          "tfidf": {
+            "ranking": [
+              {
+                "id": "corpus-hash",
+                "text": "A reproducible experiment records a SHA256 hash of the corpus and relevance judgments. Export the dataset, parameters, software version and results together.",
+                "score": 0.24097906595353868
+              },
+              {
+                "id": "eval-metrics",
+                "text": "Retrieval evaluation uses relevance judgments. Precision counts relevant results among the requested k positions. Recall measures how many relevant documents were found. Reciprocal rank rewards an early first hit.",
+                "score": 0.16982582003761396
+              },
+              {
+                "id": "graph-retrieval",
+                "text": "Graph retrieval starts with vector search seeds and follows graph edges for two hops. Document scoped retrieval filters seeds and all neighboring nodes by document ID.",
+                "score": 0.12332592970519049
+              }
+            ],
+            "latency_ms": 0.00970800465438515,
+            "metrics": {
+              "precision": 0.6666666666666666,
+              "recall": 1.0,
+              "mrr": 1.0,
+              "ndcg": 1.0
+            }
+          }
+        }
+      },
+      {
+        "id": "q4",
+        "text": "image chart values generation fails",
+        "relevant_ids": [
+          "image-failure"
+        ],
+        "results": {
+          "bm25": {
+            "ranking": [
+              {
+                "id": "image-failure",
+                "text": "When image description generation fails, return an unavailable message. Do not insert invented chart values into retrieved evidence.",
+                "score": 11.042384045271021
+              }
+            ],
+            "latency_ms": 0.009332987247034907,
+            "metrics": {
+              "precision": 0.3333333333333333,
+              "recall": 1.0,
+              "mrr": 1.0,
+              "ndcg": 1.0
+            }
+          },
+          "tfidf": {
+            "ranking": [
+              {
+                "id": "image-failure",
+                "text": "When image description generation fails, return an unavailable message. Do not insert invented chart values into retrieved evidence.",
+                "score": 0.531154183677781
+              }
+            ],
+            "latency_ms": 0.01016599708236754,
+            "metrics": {
+              "precision": 0.3333333333333333,
+              "recall": 1.0,
+              "mrr": 1.0,
+              "ndcg": 1.0
+            }
+          }
+        }
+      },
+      {
+        "id": "q5",
+        "text": "ranking document length normalization",
+        "relevant_ids": [
+          "ranking-baselines"
+        ],
+        "results": {
+          "bm25": {
+            "ranking": [
+              {
+                "id": "ranking-baselines",
+                "text": "BM25 ranks lexical document matches using term frequency saturation and document length normalization. TF-IDF cosine ranking normalizes document vectors and query vectors.",
+                "score": 8.446631395610977
+              },
+              {
+                "id": "graph-retrieval",
+                "text": "Graph retrieval starts with vector search seeds and follows graph edges for two hops. Document scoped retrieval filters seeds and all neighboring nodes by document ID.",
+                "score": 2.0314101008200867
+              }
+            ],
+            "latency_ms": 0.008749993867240846,
+            "metrics": {
+              "precision": 0.3333333333333333,
+              "recall": 1.0,
+              "mrr": 1.0,
+              "ndcg": 1.0
+            }
+          },
+          "tfidf": {
+            "ranking": [
+              {
+                "id": "ranking-baselines",
+                "text": "BM25 ranks lexical document matches using term frequency saturation and document length normalization. TF-IDF cosine ranking normalizes document vectors and query vectors.",
+                "score": 0.4922553881290647
+              },
+              {
+                "id": "graph-retrieval",
+                "text": "Graph retrieval starts with vector search seeds and follows graph edges for two hops. Document scoped retrieval filters seeds and all neighboring nodes by document ID.",
+                "score": 0.12332592970519049
+              }
+            ],
+            "latency_ms": 0.009249997674487531,
+            "metrics": {
+              "precision": 0.3333333333333333,
+              "recall": 1.0,
+              "mrr": 1.0,
+              "ndcg": 1.0
+            }
+          }
+        }
+      }
+    ]
+  }
+}

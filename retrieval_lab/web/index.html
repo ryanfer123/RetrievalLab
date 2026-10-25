@@ -3,8 +3,13 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <title>RetrievalLab · Retrieval workbench</title>
-    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <meta
+      name="description"
+      content="Compare BM25 and TF-IDF retrieval with your documents and relevance labels. Inspect ranked evidence and export reproducible experiments with RetrievalLab."
+    />
+    <meta name="theme-color" content="#14283f" />
+    <title>RetrievalLab · Search deserves an experiment.</title>
+    <link rel="icon" href="/favicon.svg" />
     <link
       rel="preload"
       href="/vendor/manrope-latin.woff2"
@@ -13,33 +18,39 @@
       crossorigin
     />
     <link rel="stylesheet" href="/vendor/lenis.css" />
-    <link rel="stylesheet" href="/style.css" />
+    <link rel="stylesheet" href="/home.css" />
     <script src="/vendor/gsap.min.js" defer></script>
     <script src="/vendor/ScrollTrigger.min.js" defer></script>
     <script src="/vendor/lenis.min.js" defer></script>
-    <script src="/motion.js" defer></script>
-    <script src="/app.js" defer></script>
+    <script src="/home.js" defer></script>
   </head>
   <body>
-    <noscript
-      ><div class="noscript-notice">
-        JavaScript is needed for the interactive workbench. You can still
-        evaluate a dataset with
-        <code
-          >python -m retrieval_lab --evaluate dataset.json --output
-          run.json</code
-        >.
-      </div></noscript
-    >
-    <div class="app-shell">
-      <aside class="sidebar">
-        <a class="brand" href="/" aria-label="RetrievalLab home"
-          ><span class="brand-mark">r<span>l</span></span
-          >RetrievalLab</a
-        >
-        <p class="brand-note">A workbench for finding things.</p>
-        <nav aria-label="Workspace">
-          <button class="nav-active" id="workspace-button">
+    <a class="skip-link" href="#main-content">Skip to content</a>
+    <header class="site-header">
+      <a href="/" class="brand" aria-label="RetrievalLab home"
+        ><span class="brand-mark" aria-hidden="true">r<span>l</span></span
+        >RetrievalLab</a
+      >
+      <nav class="desktop-nav" aria-label="Main navigation">
+        <a href="#workflow">The workflow</a><a href="#methods">Methods</a
+        ><a href="#data-format">Bring your data</a
+        ><a href="#questions">Questions</a>
+      </nav>
+      <div class="header-actions">
+        <a class="button button-small primary" href="/workspace"
+          >Open workbench
+          <svg class="icon" aria-hidden="true" viewBox="0 0 24 24" fill="none">
+            <path
+              fill="none"
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="1.5"
+              d="M6 18L18 6M18 15V6H9"
+            /></svg
+        ></a>
+        <details class="mobile-menu">
+          <summary aria-label="Navigation menu">
             <svg
               class="icon"
               aria-hidden="true"
@@ -52,87 +63,247 @@
                 stroke-linecap="round"
                 stroke-width="1.5"
               >
-                <path
-                  d="M2.5 6.5C2.5 4.29086 4.29086 2.5 6.5 2.5C8.70914 2.5 10.5 4.29086 10.5 6.5C10.5 8.70914 8.70914 10.5 6.5 10.5C4.29086 10.5 2.5 8.70914 2.5 6.5Z"
-                />
-                <path
-                  d="M13.5 17.5C13.5 15.2909 15.2909 13.5 17.5 13.5C19.7091 13.5 21.5 15.2909 21.5 17.5C21.5 19.7091 19.7091 21.5 17.5 21.5C15.2909 21.5 13.5 19.7091 13.5 17.5Z"
-                />
-                <path
-                  d="M21.5 6.5C21.5 4.61438 21.5 3.67157 20.9142 3.08579C20.3284 2.5 19.3856 2.5 17.5 2.5C15.6144 2.5 14.6716 2.5 14.0858 3.08579C13.5 3.67157 13.5 4.61438 13.5 6.5C13.5 8.38562 13.5 9.32843 14.0858 9.91421C14.6716 10.5 15.6144 10.5 17.5 10.5C19.3856 10.5 20.3284 10.5 20.9142 9.91421C21.5 9.32843 21.5 8.38562 21.5 6.5Z"
-                />
-                <path
-                  d="M10.5 17.5C10.5 15.6144 10.5 14.6716 9.91421 14.0858C9.32843 13.5 8.38562 13.5 6.5 13.5C4.61438 13.5 3.67157 13.5 3.08579 14.0858C2.5 14.6716 2.5 15.6144 2.5 17.5C2.5 19.3856 2.5 20.3284 3.08579 20.9142C3.67157 21.5 4.61438 21.5 6.5 21.5C8.38562 21.5 9.32843 21.5 9.91421 20.9142C10.5 20.3284 10.5 19.3856 10.5 17.5Z"
-                />
+                <path d="M20 7L4 7" />
+                <path d="M20 12L4 12" />
+                <path d="M20 17L4 17" />
               </g>
             </svg>
-            Comparison workspace</button
-          ><button id="import-nav">
-            <svg
-              class="icon"
-              aria-hidden="true"
-              viewBox="0 0 24 24"
-              fill="none"
+          </summary>
+          <nav aria-label="Mobile navigation">
+            <a href="#workflow">The workflow</a><a href="#methods">Methods</a
+            ><a href="#data-format">Bring your data</a
+            ><a href="#questions">Questions</a>
+          </nav>
+        </details>
+      </div>
+    </header>
+    <main id="main-content">
+      <section class="hero page-width" aria-labelledby="hero-title">
+        <div class="hero-copy">
+          <p class="intro-label">
+            <span></span> An inspectable retrieval workbench
+          </p>
+          <h1 id="hero-title" aria-label="Search deserves an experiment.">
+            <span aria-hidden="true"
+              ><span class="hero-word">Search</span>
+              <span class="hero-word">deserves</span><br /><span
+                class="hero-word"
+                >an</span
+              >
+              <span class="hero-word">experiment.</span></span
             >
-              <g
+          </h1>
+          <p class="hero-description">
+            Bring your documents and relevance labels. Compare two lexical
+            retrievers, look inside the ranked evidence, and keep an experiment
+            you can reproduce.
+          </p>
+          <div class="hero-actions">
+            <a class="button primary" href="/workspace"
+              >Open the workbench
+              <svg
+                class="icon"
+                aria-hidden="true"
+                viewBox="0 0 24 24"
                 fill="none"
-                stroke="currentColor"
-                stroke-linecap="round"
-                stroke-width="1.5"
               >
                 <path
-                  d="M2 12C2 7.28595 2 4.92893 3.46447 3.46447C4.92893 2 7.28595 2 12 2C16.714 2 19.0711 2 20.5355 3.46447C22 4.92893 22 7.28595 22 12C22 16.714 22 19.0711 20.5355 20.5355C19.0711 22 16.714 22 12 22C7.28595 22 4.92893 22 3.46447 20.5355C2 19.0711 2 16.714 2 12Z"
-                />
-                <path d="M15 12L12 12M12 12L9 12M12 12L12 9M12 12L12 15" />
-              </g>
-            </svg>
-            Import a dataset
-          </button>
-        </nav>
-        <div class="sidebar-heading">
-          <h2>Experiment history</h2>
-          <span id="run-count">0</span>
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="1.5"
+                  d="M6 18L18 6M18 15V6H9"
+                /></svg></a
+            ><a class="quiet-link" href="#sample"
+              >Explore the sample
+              <svg
+                class="icon"
+                aria-hidden="true"
+                viewBox="0 0 24 24"
+                fill="none"
+              >
+                <path
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="1.5"
+                  d="M12 4L12 20M6 14L12 20L18 14"
+                /></svg
+            ></a>
+          </div>
+          <p class="hero-footnote">
+            BM25 and TF-IDF cosine. Clear baselines, your own questions.
+          </p>
         </div>
-        <div id="history" class="history">
-          <p class="muted">Your saved comparisons will appear here.</p>
-        </div>
-        <div class="sidebar-footer">
-          <span class="status-dot"></span> Local workspace
-          <p>Data stays on this computer.</p>
-          <a
-            href="https://github.com/ryanfer123/RetrievalLab"
-            target="_blank"
-            rel="noreferrer"
-            >Source & documentation ↗</a
-          >
-        </div>
-      </aside>
-      <main>
-        <header class="topbar">
-          <span>Workspace <span class="slash">/</span> Compare retrieval</span
-          ><span class="local-badge"
-            ><span class="status-dot"></span> Python + SQLite</span
-          >
-        </header>
-        <div class="workspace">
-          <section class="hero">
-            <div class="hero-copy">
-              <div class="workbench-label">
-                <span class="live-line"></span> Your retrieval experiment studio
-              </div>
-              <h1 aria-label="Find the better match.">
-                <span aria-hidden="true" class="title-word">Find the</span
-                ><br /><span aria-hidden="true" class="title-word"
-                  >better match.</span
+        <div class="preview" id="sample">
+          <div class="preview-topline">
+            <span class="preview-symbol"
+              ><svg
+                class="icon"
+                aria-hidden="true"
+                viewBox="0 0 24 24"
+                fill="none"
+              >
+                <g
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-linecap="round"
+                  stroke-width="1.5"
                 >
-              </h1>
-              <p>
-                Two retrievers. The same questions.<br />See where your search
-                gets it right.
-              </p>
-              <button class="button secondary" id="import-button">
-                Import your dataset
-                <svg
+                  <path
+                    d="M4.97883 9.68508C2.99294 8.89073 2 8.49355 2 8C2 7.50645 2.99294 7.10927 4.97883 6.31492L7.7873 5.19153C9.77318 4.39718 10.7661 4 12 4C13.2339 4 14.2268 4.39718 16.2127 5.19153L19.0212 6.31492C21.0071 7.10927 22 7.50645 22 8C22 8.49355 21.0071 8.89073 19.0212 9.68508L16.2127 10.8085C14.2268 11.6028 13.2339 12 12 12C10.7661 12 9.77318 11.6028 7.7873 10.8085L4.97883 9.68508Z"
+                  />
+                  <path
+                    d="M5.76613 10L4.97883 10.3149C2.99294 11.1093 2 11.5065 2 12C2 12.4935 2.99294 12.8907 4.97883 13.6851L7.7873 14.8085C9.77318 15.6028 10.7661 16 12 16C13.2339 16 14.2268 15.6028 16.2127 14.8085L19.0212 13.6851C21.0071 12.8907 22 12.4935 22 12C22 11.5065 21.0071 11.1093 19.0212 10.3149L18.2339 10"
+                  />
+                  <path
+                    d="M5.76613 14L4.97883 14.3149C2.99294 15.1093 2 15.5065 2 16C2 16.4935 2.99294 16.8907 4.97883 17.6851L7.7873 18.8085C9.77318 19.6028 10.7661 20 12 20C13.2339 20 14.2268 19.6028 16.2127 18.8085L19.0212 17.6851C21.0071 16.8907 22 16.4935 22 16C22 15.5065 21.0071 15.1093 19.0212 14.3149L18.2339 14"
+                  />
+                </g></svg></span
+            ><strong>A query, under the lens</strong
+            ><span class="demo-badge">Included demo</span>
+          </div>
+          <div class="preview-query">
+            <label for="home-query">Choose an example question</label
+            ><select id="home-query" aria-describedby="preview-note" disabled>
+              <option value="1">document scoped graph retrieval</option>
+            </select>
+          </div>
+          <div class="preview-rankings" id="preview-rankings">
+            <section class="preview-method bm25">
+              <div class="preview-method-heading">
+                <span class="dot"></span>BM25
+              </div>
+              <ol class="preview-ranking">
+                <li>
+                  <div class="preview-result-title">
+                    graph-retrieval<span class="relevant">Relevant</span>
+                  </div>
+                  <p>
+                    Graph retrieval starts with vector search seeds and follows
+                    graph edges for two hops.…
+                  </p>
+                  <span class="preview-score">Raw score 8.6766</span>
+                </li>
+                <li>
+                  <div class="preview-result-title">ranking-baselines</div>
+                  <p>
+                    BM25 ranks lexical document matches using term frequency
+                    saturation and document leng…
+                  </p>
+                  <span class="preview-score">Raw score 2.4693</span>
+                </li>
+                <li>
+                  <div class="preview-result-title">eval-metrics</div>
+                  <p>
+                    Retrieval evaluation uses relevance judgments. Precision
+                    counts relevant results amon…
+                  </p>
+                  <span class="preview-score">Raw score 1.3259</span>
+                </li>
+              </ol>
+            </section>
+            <section class="preview-method tfidf">
+              <div class="preview-method-heading">
+                <span class="dot"></span>TF-IDF cosine
+              </div>
+              <ol class="preview-ranking">
+                <li>
+                  <div class="preview-result-title">
+                    graph-retrieval<span class="relevant">Relevant</span>
+                  </div>
+                  <p>
+                    Graph retrieval starts with vector search seeds and follows
+                    graph edges for two hops.…
+                  </p>
+                  <span class="preview-score">Raw score 0.5386</span>
+                </li>
+                <li>
+                  <div class="preview-result-title">ranking-baselines</div>
+                  <p>
+                    BM25 ranks lexical document matches using term frequency
+                    saturation and document leng…
+                  </p>
+                  <span class="preview-score">Raw score 0.1718</span>
+                </li>
+                <li>
+                  <div class="preview-result-title">eval-metrics</div>
+                  <p>
+                    Retrieval evaluation uses relevance judgments. Precision
+                    counts relevant results amon…
+                  </p>
+                  <span class="preview-score">Raw score 0.0741</span>
+                </li>
+              </ol>
+            </section>
+          </div>
+          <div class="preview-source">
+            <span class="source-dot"></span
+            ><span id="preview-hash">Dataset SHA256 f8057ebea6999c51…</span
+            ><a
+              href="/home-demo.json"
+              download="retrievallab-home-demo.json"
+              aria-label="Download this computed demo record"
+              ><svg
+                class="icon"
+                aria-hidden="true"
+                viewBox="0 0 24 24"
+                fill="none"
+              >
+                <g
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-linecap="round"
+                  stroke-width="1.5"
+                >
+                  <path
+                    d="M17 9.00195C19.175 9.01406 20.3529 9.11051 21.1213 9.8789C22 10.7576 22 12.1718 22 15.0002V16.0002C22 18.8286 22 20.2429 21.1213 21.1215C20.2426 22.0002 18.8284 22.0002 16 22.0002H8C5.17157 22.0002 3.75736 22.0002 2.87868 21.1215C2 20.2429 2 18.8286 2 16.0002L2 15.0002C2 12.1718 2 10.7576 2.87868 9.87889C3.64706 9.11051 4.82497 9.01406 7 9.00195"
+                  />
+                  <path
+                    stroke-linejoin="round"
+                    d="M12 2L12 15M15 11.5L12 15L9 11.5"
+                  />
+                </g></svg
+            ></a>
+          </div>
+          <p id="preview-note" class="preview-note">
+            Actual production-engine results from the included ten-document,
+            hand-authored fixture. This is a workflow example, not an external
+            benchmark.
+          </p>
+          <noscript
+            ><p class="preview-note">
+              The preview shows one fixed example without JavaScript. The full
+              workbench requires JavaScript.
+            </p></noscript
+          >
+        </div>
+      </section>
+      <section
+        class="workflow-section"
+        id="workflow"
+        aria-labelledby="workflow-title"
+      >
+        <div class="page-width">
+          <div class="section-intro">
+            <div>
+              <p class="section-kicker">From a corpus to a comparison</p>
+              <h2 id="workflow-title" class="reveal-heading">
+                Make the question testable.
+              </h2>
+            </div>
+            <p>
+              Use the same documents, questions, and judgments for both methods.
+              Inspect the result at the level that matters: one query at a time.
+            </p>
+          </div>
+          <div class="workflow-grid">
+            <article>
+              <span class="step-label">01 / Prepare</span
+              ><span class="step-icon"
+                ><svg
                   class="icon"
                   aria-hidden="true"
                   viewBox="0 0 24 24"
@@ -145,60 +316,325 @@
                     stroke-width="1.5"
                   >
                     <path
-                      d="M2 12C2 7.28595 2 4.92893 3.46447 3.46447C4.92893 2 7.28595 2 12 2C16.714 2 19.0711 2 20.5355 3.46447C22 4.92893 22 7.28595 22 12C22 16.714 22 19.0711 20.5355 20.5355C19.0711 22 16.714 22 12 22C7.28595 22 4.92893 22 3.46447 20.5355C2 19.0711 2 16.714 2 12Z"
+                      d="M3 10C3 6.22876 3 4.34315 4.17157 3.17157C5.34315 2 7.22876 2 11 2H13C16.7712 2 18.6569 2 19.8284 3.17157C21 4.34315 21 6.22876 21 10V14C21 17.7712 21 19.6569 19.8284 20.8284C18.6569 22 16.7712 22 13 22H11C7.22876 22 5.34315 22 4.17157 20.8284C3 19.6569 3 17.7712 3 14V10Z"
                     />
-                    <path d="M15 12L12 12M12 12L9 12M12 12L12 9M12 12L12 15" />
-                  </g>
-                </svg>
-              </button>
-            </div>
-            <div class="hero-evidence">
-              <div class="evidence-heading">
-                <span class="evidence-kicker">The ranking room</span
-                ><span class="evidence-status" id="rank-status"
-                  >Ready for evidence</span
+                    <path d="M8 12H16" />
+                    <path d="M8 8H16" />
+                    <path d="M8 16H13" />
+                  </g></svg
+              ></span>
+              <h3>Bring a labeled corpus.</h3>
+              <p>
+                Import document text, evaluation queries, and the document IDs
+                relevant to each query. Validation catches missing or
+                inconsistent judgments before a run.
+              </p>
+            </article>
+            <article>
+              <span class="step-label">02 / Compare</span
+              ><span class="step-icon"
+                ><svg
+                  class="icon"
+                  aria-hidden="true"
+                  viewBox="0 0 24 24"
+                  fill="none"
                 >
-              </div>
-              <div id="rank-map">
-                <div class="evidence-empty">
-                  <span>Corpus → Questions → Comparison</span>
-                  <p>
-                    Turn a list of documents into an experiment you can inspect.
-                  </p>
-                  <div class="evidence-baselines">
-                    <span>BM25</span><b>↔</b><span>TF-IDF</span>
-                  </div>
-                </div>
-              </div>
-              <div class="evidence-footer">
-                <span class="status-dot"></span
-                ><span id="rank-caption"
-                  >Your data. Your relevance labels.</span
+                  <g
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="1.5"
+                  >
+                    <path d="M18 8L6 8M10.125 12L6 8L10.125 4" />
+                    <path d="M6 16L18 16M13.875 20L18 16L13.875 12" />
+                  </g></svg
+              ></span>
+              <h3>Run both baselines.</h3>
+              <p>
+                Choose a result cutoff and evaluate BM25 alongside TF-IDF
+                cosine. See precision, recall, reciprocal rank, and nDCG from
+                the same labels.
+              </p>
+            </article>
+            <article>
+              <span class="step-label">03 / Inspect</span
+              ><span class="step-icon"
+                ><svg
+                  class="icon"
+                  aria-hidden="true"
+                  viewBox="0 0 24 24"
+                  fill="none"
                 >
-              </div>
+                  <g
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-linecap="round"
+                    stroke-width="1.5"
+                  >
+                    <path
+                      d="M3.27489 15.2957C2.42496 14.1915 2 13.6394 2 12C2 10.3606 2.42496 9.80853 3.27489 8.70433C4.97196 6.49956 7.81811 4 12 4C16.1819 4 19.028 6.49956 20.7251 8.70433C21.575 9.80853 22 10.3606 22 12C22 13.6394 21.575 14.1915 20.7251 15.2957C19.028 17.5004 16.1819 20 12 20C7.81811 20 4.97196 17.5004 3.27489 15.2957Z"
+                    />
+                    <path
+                      d="M15 12C15 13.6569 13.6569 15 12 15C10.3431 15 9 13.6569 9 12C9 10.3431 10.3431 9 12 9C13.6569 9 15 10.3431 15 12Z"
+                    />
+                  </g></svg
+              ></span>
+              <h3>Read the evidence.</h3>
+              <p>
+                Switch queries to inspect returned passages, scores, and
+                relevance marks. Save the experiment and export its data,
+                configuration, and results together.
+              </p>
+            </article>
+          </div>
+        </div>
+      </section>
+      <section
+        class="methods-section page-width"
+        id="methods"
+        aria-labelledby="methods-title"
+      >
+        <div class="methods-copy">
+          <p class="section-kicker">Baselines with explicit definitions</p>
+          <h2 id="methods-title" class="reveal-heading">
+            Two ways to rank.<br />One shared test.
+          </h2>
+          <p class="section-lead">
+            Start with methods whose behavior you can inspect. Neither needs a
+            model download, embedding service, or generated answer.
+          </p>
+          <p class="method-caution">
+            The two methods’ raw scores use different scales. Compare their
+            judged rankings and metrics, not the magnitudes of their retrieval
+            scores.
+          </p>
+        </div>
+        <div class="methods-panel">
+          <article class="method-definition bm25">
+            <div class="method-heading">
+              <span class="method-dot"></span>
+              <h3>BM25</h3>
+              <span>Lexical ranking</span>
             </div>
-          </section>
-          <div id="notice" role="status" aria-live="polite" hidden></div>
-          <section class="experiment-config" aria-label="Experiment settings">
-            <div class="dataset-field">
-              <label for="dataset-select">Dataset</label
-              ><select id="dataset-select">
-                <option value="">Choose or import a dataset</option></select
-              ><span id="dataset-meta"
-                >Your documents and relevance judgments.</span
+            <p>
+              Balances matching term frequency with document length, using
+              term-frequency saturation.
+            </p>
+            <dl>
+              <div>
+                <dt>k₁</dt>
+                <dd>1.5</dd>
+              </div>
+              <div>
+                <dt>b</dt>
+                <dd>0.75</dd>
+              </div>
+              <div>
+                <dt>IDF</dt>
+                <dd>Positive variant</dd>
+              </div>
+            </dl>
+          </article>
+          <article class="method-definition tfidf">
+            <div class="method-heading">
+              <span class="method-dot"></span>
+              <h3>TF-IDF cosine</h3>
+              <span>Vector comparison</span>
+            </div>
+            <p>
+              Weights terms by frequency and corpus rarity, then compares
+              normalized document and query vectors.
+            </p>
+            <dl>
+              <div>
+                <dt>Term frequency</dt>
+                <dd>1 + ln(count)</dd>
+              </div>
+              <div>
+                <dt>IDF</dt>
+                <dd>Smoothed</dd>
+              </div>
+              <div>
+                <dt>Similarity</dt>
+                <dd>Cosine</dd>
+              </div>
+            </dl>
+          </article>
+          <p class="methods-footnote">
+            Both use Unicode word tokens, case folding, no stemming or stopword
+            removal, and document-ID tie ordering.
+          </p>
+        </div>
+      </section>
+      <section class="product-section" aria-labelledby="product-title">
+        <div class="page-width">
+          <div class="product-intro">
+            <p class="section-kicker">Keep the result close to the source</p>
+            <h2 id="product-title" class="reveal-heading">
+              A workbench, not a verdict.
+            </h2>
+            <p>
+              Overview metrics help you find a pattern. Ranked passages and
+              relevance labels let you check what produced it.
+            </p>
+          </div>
+          <figure class="workspace-preview">
+            <img
+              src="/home-assets/workspace.jpg"
+              alt="Actual RetrievalLab workspace showing its included hand-authored demonstration corpus, two baseline metric panels, and query inspection controls"
+              width="1470"
+              height="808"
+              loading="lazy"
+            />
+            <figcaption>
+              <span
+                >Actual workspace capture from the bundled demonstration
+                corpus.</span
+              ><span
+                >Demo scores do not establish external retrieval quality.</span
               >
-            </div>
-            <div class="cutoff-field">
-              <label for="cutoff">Results per query</label
-              ><select id="cutoff">
-                <option value="3">Top 3</option>
-                <option value="5" selected>Top 5</option>
-                <option value="10">Top 10</option>
-                <option value="20">Top 20</option></select
-              ><span>Evaluation cutoff (k)</span>
-            </div>
-            <button class="button primary" id="run-button" disabled>
-              <svg
+            </figcaption>
+          </figure>
+        </div>
+      </section>
+      <section
+        class="data-section page-width"
+        id="data-format"
+        aria-labelledby="data-title"
+      >
+        <div class="data-copy">
+          <p class="section-kicker">A small format with a clear contract</p>
+          <h2 id="data-title" class="reveal-heading">
+            Your questions.<br />Your relevance labels.
+          </h2>
+          <p class="section-lead">
+            Paste a JSON dataset or choose a file. A relevant document ID must
+            point to an existing document, and every query needs at least one
+            relevance judgment.
+          </p>
+          <div class="data-limits">
+            <span>Up to 1,000 documents</span
+            ><span>Up to 100 labeled queries</span><span>2 MiB per import</span>
+          </div>
+          <a
+            class="quiet-link"
+            href="/demo.json"
+            download="retrievallab-example-dataset.json"
+            >Download a complete example
+            <svg
+              class="icon"
+              aria-hidden="true"
+              viewBox="0 0 24 24"
+              fill="none"
+            >
+              <g
+                fill="none"
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-width="1.5"
+              >
+                <path
+                  d="M17 9.00195C19.175 9.01406 20.3529 9.11051 21.1213 9.8789C22 10.7576 22 12.1718 22 15.0002V16.0002C22 18.8286 22 20.2429 21.1213 21.1215C20.2426 22.0002 18.8284 22.0002 16 22.0002H8C5.17157 22.0002 3.75736 22.0002 2.87868 21.1215C2 20.2429 2 18.8286 2 16.0002L2 15.0002C2 12.1718 2 10.7576 2.87868 9.87889C3.64706 9.11051 4.82497 9.01406 7 9.00195"
+                />
+                <path
+                  stroke-linejoin="round"
+                  d="M12 2L12 15M15 11.5L12 15L9 11.5"
+                />
+              </g></svg
+          ></a>
+        </div>
+        <div class="format-panel">
+          <div class="format-header">
+            <span>dataset.json</span><span>Binary relevance judgments</span>
+          </div>
+          <pre><code>{
+  "name": "Battery documentation",
+  "documents": [
+    {
+      "id": "d1",
+      "text": "Battery health uses cycle count."
+    }
+  ],
+  "queries": [
+    {
+      "id": "q1",
+      "text": "battery cycle count",
+      "relevant_ids": ["d1"]
+    }
+  ]
+}</code></pre>
+        </div>
+      </section>
+      <section class="record-section page-width" aria-labelledby="record-title">
+        <div class="record-intro">
+          <p class="section-kicker">An experiment you can retrace</p>
+          <h2 id="record-title" class="reveal-heading">
+            Keep more than a score.
+          </h2>
+          <p>
+            Export one record that carries the context needed to understand a
+            run later.
+          </p>
+        </div>
+        <div class="record-grid">
+          <article>
+            <span
+              ><svg
+                class="icon"
+                aria-hidden="true"
+                viewBox="0 0 24 24"
+                fill="none"
+              >
+                <g
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-linecap="round"
+                  stroke-width="1.5"
+                >
+                  <path
+                    d="M3 10C3 6.22876 3 4.34315 4.17157 3.17157C5.34315 2 7.22876 2 11 2H13C16.7712 2 18.6569 2 19.8284 3.17157C21 4.34315 21 6.22876 21 10V14C21 17.7712 21 19.6569 19.8284 20.8284C18.6569 22 16.7712 22 13 22H11C7.22876 22 5.34315 22 4.17157 20.8284C3 19.6569 3 17.7712 3 14V10Z"
+                  />
+                  <path d="M8 12H16" />
+                  <path d="M8 8H16" />
+                  <path d="M8 16H13" />
+                </g></svg
+            ></span>
+            <h3>The input evidence</h3>
+            <p>
+              Documents, questions, and relevance judgments travel with the
+              experiment.
+            </p>
+          </article>
+          <article>
+            <span
+              ><svg
+                class="icon"
+                aria-hidden="true"
+                viewBox="0 0 24 24"
+                fill="none"
+              >
+                <g
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-linecap="round"
+                  stroke-width="1.5"
+                >
+                  <circle cx="12" cy="12" r="3" />
+                  <path
+                    d="M13.7654 2.15224C13.3978 2 12.9319 2 12 2C11.0681 2 10.6022 2 10.2346 2.15224C9.74457 2.35523 9.35522 2.74458 9.15223 3.23463C9.05957 3.45834 9.0233 3.7185 9.00911 4.09799C8.98826 4.65568 8.70226 5.17189 8.21894 5.45093C7.73564 5.72996 7.14559 5.71954 6.65219 5.45876C6.31645 5.2813 6.07301 5.18262 5.83294 5.15102C5.30704 5.08178 4.77518 5.22429 4.35436 5.5472C4.03874 5.78938 3.80577 6.1929 3.33983 6.99993C2.87389 7.80697 2.64092 8.21048 2.58899 8.60491C2.51976 9.1308 2.66227 9.66266 2.98518 10.0835C3.13256 10.2756 3.3397 10.437 3.66119 10.639C4.1338 10.936 4.43789 11.4419 4.43786 12C4.43783 12.5581 4.13375 13.0639 3.66118 13.3608C3.33965 13.5629 3.13248 13.7244 2.98508 13.9165C2.66217 14.3373 2.51966 14.8691 2.5889 15.395C2.64082 15.7894 2.87379 16.193 3.33973 17C3.80568 17.807 4.03865 18.2106 4.35426 18.4527C4.77508 18.7756 5.30694 18.9181 5.83284 18.8489C6.07289 18.8173 6.31632 18.7186 6.65204 18.5412C7.14547 18.2804 7.73556 18.27 8.2189 18.549C8.70224 18.8281 8.98826 19.3443 9.00911 19.9021C9.02331 20.2815 9.05957 20.5417 9.15223 20.7654C9.35522 21.2554 9.74457 21.6448 10.2346 21.8478C10.6022 22 11.0681 22 12 22C12.9319 22 13.3978 22 13.7654 21.8478C14.2554 21.6448 14.6448 21.2554 14.8477 20.7654C14.9404 20.5417 14.9767 20.2815 14.9909 19.902C15.0117 19.3443 15.2977 18.8281 15.781 18.549C16.2643 18.2699 16.8544 18.2804 17.3479 18.5412C17.6836 18.7186 17.927 18.8172 18.167 18.8488C18.6929 18.9181 19.2248 18.7756 19.6456 18.4527C19.9612 18.2105 20.1942 17.807 20.6601 16.9999C21.1261 16.1929 21.3591 15.7894 21.411 15.395C21.4802 14.8691 21.3377 14.3372 21.0148 13.9164C20.8674 13.7243 20.6602 13.5628 20.3387 13.3608C19.8662 13.0639 19.5621 12.558 19.5621 11.9999C19.5621 11.4418 19.8662 10.9361 20.3387 10.6392C20.6603 10.4371 20.8675 10.2757 21.0149 10.0835C21.3378 9.66273 21.4803 9.13087 21.4111 8.60497C21.3592 8.21055 21.1262 7.80703 20.6602 7C20.1943 6.19297 19.9613 5.78945 19.6457 5.54727C19.2249 5.22436 18.693 5.08185 18.1671 5.15109C17.9271 5.18269 17.6837 5.28136 17.3479 5.4588C16.8545 5.71959 16.2644 5.73002 15.7811 5.45096C15.2977 5.17191 15.0117 4.65566 14.9909 4.09794C14.9767 3.71848 14.9404 3.45833 14.8477 3.23463C14.6448 2.74458 14.2554 2.35523 13.7654 2.15224Z"
+                  />
+                </g></svg
+            ></span>
+            <h3>The exact configuration</h3>
+            <p>
+              Cutoff, method parameters, tokenization rules, and software
+              version remain explicit.
+            </p>
+          </article>
+          <article>
+            <span
+              ><svg
                 class="icon"
                 aria-hidden="true"
                 viewBox="0 0 24 24"
@@ -212,151 +648,180 @@
                 >
                   <circle cx="12" cy="12" r="10" />
                   <path
-                    d="M15.4137 10.941C16.1954 11.4026 16.1954 12.5974 15.4137 13.059L10.6935 15.8458C9.93371 16.2944 9 15.7105 9 14.7868L9 9.21316C9 8.28947 9.93371 7.70561 10.6935 8.15419L15.4137 10.941Z"
+                    stroke-linejoin="round"
+                    d="M8.5 12.5L10.5 14.5L15.5 9.5"
                   />
-                </g>
-              </svg>
-              Run comparison
-            </button>
-          </section>
-          <section id="empty-state" class="empty-state">
-            <h2>Give your search a fair comparison.</h2>
+                </g></svg
+            ></span>
+            <h3>The result and its identity</h3>
             <p>
-              Start with a small, labeled corpus. Run BM25 and TF-IDF on the
-              same questions, then see which documents each one finds.
+              Per-query rankings, measured metrics, and a dataset SHA256
+              identify what was evaluated.
             </p>
-            <button class="button primary" id="demo-button">
-              Try the demo corpus</button
-            ><span class="demo-note"
-              >10 documents · 5 questions · Hand-authored labels</span
-            >
-          </section>
-          <section id="results" hidden>
-            <div class="section-heading">
-              <div>
-                <h2>Comparison overview</h2>
-                <p id="run-meta"></p>
-              </div>
-              <button class="button secondary small" id="export-button">
-                <svg
-                  class="icon"
-                  aria-hidden="true"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                >
-                  <g
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-linecap="round"
-                    stroke-width="1.5"
-                  >
-                    <path
-                      d="M17 9.00195C19.175 9.01406 20.3529 9.11051 21.1213 9.8789C22 10.7576 22 12.1718 22 15.0002V16.0002C22 18.8286 22 20.2429 21.1213 21.1215C20.2426 22.0002 18.8284 22.0002 16 22.0002H8C5.17157 22.0002 3.75736 22.0002 2.87868 21.1215C2 20.2429 2 18.8286 2 16.0002L2 15.0002C2 12.1718 2 10.7576 2.87868 9.87889C3.64706 9.11051 4.82497 9.01406 7 9.00195"
-                    />
-                    <path
-                      stroke-linejoin="round"
-                      d="M12 2L12 15M15 11.5L12 15L9 11.5"
-                    />
-                  </g></svg
-                >Export experiment
-              </button>
-            </div>
-            <div id="metric-summary" class="metric-summary"></div>
-            <p class="metric-note">
-              Averages across labeled queries. Unreturned positions count
-              against precision. Scores depend on your relevance labels.
+          </article>
+        </div>
+      </section>
+      <section
+        class="faq-section page-width"
+        id="questions"
+        aria-labelledby="faq-title"
+      >
+        <div>
+          <p class="section-kicker">Before your first run</p>
+          <h2 id="faq-title" class="reveal-heading">A few useful details.</h2>
+        </div>
+        <div class="faq-list">
+          <details>
+            <summary>Where does my experiment live?</summary>
+            <p>The local app saves experiments in SQLite on your computer. The hosted
+              site sends your dataset to its Python API for computation and keeps your
+              working results temporarily in this browser tab. Export a file or choose
+              Cloud workspaces to sign in and save a private cloud copy. Only an
+              explicit cloud save creates that copy.</p>
+          </details>
+          <details>
+            <summary>
+              What do the metrics mean?<span aria-hidden="true">+</span>
+            </summary>
+            <p>
+              Precision divides relevant returned hits by the requested cutoff
+              k. Recall measures the share of known relevant documents
+              retrieved. MRR rewards an early first relevant result. Binary nDCG
+              rewards relevant documents near the top of the ranking. The
+              workspace averages these values across labeled queries.
             </p>
-            <div class="section-heading query-heading">
-              <div>
-                <h2>Look inside a query</h2>
-                <p>Relevant documents are marked against your labels.</p>
-              </div>
-              <span class="legend"
-                ><span class="relevant-dot"></span> Relevant match</span
+          </details>
+          <details>
+            <summary>
+              Does this evaluate generated answers?<span aria-hidden="true"
+                >+</span
               >
-            </div>
-            <div class="query-workspace">
-              <div
-                class="query-list"
-                id="query-list"
-                aria-label="Evaluation queries"
-              ></div>
-              <div class="query-detail">
-                <div id="query-description"></div>
-                <div id="rankings" class="rankings"></div>
-              </div>
-            </div>
-            <details class="method-notes">
-              <summary>How these results are calculated</summary>
-              <p>
-                BM25 uses k₁ = 1.5 and b = 0.75 with a positive IDF. TF-IDF uses
-                log term frequency, smoothed IDF, and cosine similarity. Both
-                tokenize Unicode words, fold case, and break ties by document
-                ID. Neither uses embeddings, stemming, or language models.
-              </p>
-              <p>
-                Relevance is binary. nDCG rewards relevant documents near the
-                top; reciprocal rank uses the first relevant result; recall
-                measures coverage; precision divides relevant hits by k.
-                Zero-score matches are omitted. Latency measures the search
-                call, excluding index construction, database work, and network
-                time.
-              </p>
-            </details>
-          </section>
-          <footer class="workspace-footer">
-            <span>Built for experiments you can inspect.</span
-            ><span
-              >BM25 <span class="footer-separator">/</span> TF-IDF cosine</span
+            </summary>
+            <p>
+              No. RetrievalLab evaluates lexical retrieval rankings against
+              relevance judgments. It does not generate answers, validate an
+              answer’s factual correctness, or measure end-to-end RAG
+              performance.
+            </p>
+          </details>
+          <details>
+            <summary>
+              What happens if fewer than k documents match?<span
+                aria-hidden="true"
+                >+</span
+              >
+            </summary>
+            <p>
+              Zero-score documents are omitted. Precision still divides relevant
+              hits by k, so unreturned positions reduce precision. An
+              out-of-vocabulary query can return no matches.
+            </p>
+          </details>
+          <details>
+            <summary>
+              Can I reproduce a run outside the browser?<span aria-hidden="true"
+                >+</span
+              >
+            </summary>
+            <p>
+              Yes. The command-line evaluator accepts the same dataset JSON and
+              cutoff. For the same inputs, configuration, and version, rankings,
+              metrics, and dataset hashes are deterministic. Timestamps,
+              experiment IDs, and latency measurements vary.
+            </p>
+          </details>
+          <details>
+            <summary>
+              Do the sample results show that a method is better?<span
+                aria-hidden="true"
+                >+</span
+              >
+            </summary>
+            <p>
+              No. The included corpus is tiny and hand-authored to demonstrate
+              the workflow. Its scores are not evidence of ranking superiority
+              or performance on an external benchmark. Use judgments and a
+              corpus appropriate to your own evaluation question.
+            </p>
+          </details>
+        </div>
+      </section>
+      <section class="closing-section">
+        <div class="page-width closing-inner">
+          <div>
+            <p class="section-kicker">Put an actual question in front of it.</p>
+            <h2 class="reveal-heading">Start with the evidence.</h2>
+            <p>
+              Load the demo or bring your own corpus. Make the comparison
+              inspectable.
+            </p>
+          </div>
+          <a class="button primary" href="/workspace"
+            >Open the workbench
+            <svg
+              class="icon"
+              aria-hidden="true"
+              viewBox="0 0 24 24"
+              fill="none"
             >
-          </footer>
+              <path
+                fill="none"
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="1.5"
+                d="M6 18L18 6M18 15V6H9"
+              /></svg
+          ></a>
         </div>
-      </main>
-    </div>
-    <dialog id="import-dialog">
-      <form id="import-form">
-        <div class="dialog-heading">
-          <h2>Import a dataset</h2>
-          <button
-            type="button"
-            class="icon-button"
-            id="close-import"
-            aria-label="Close import dialog"
-          >
-            ×
-          </button>
-        </div>
-        <p>
-          Add documents, queries, and the document IDs relevant to each query.
-          Nothing is sent to an external service.
-        </p>
-        <label class="file-label" for="dataset-file"
-          >Choose a JSON file<input
-            id="dataset-file"
-            type="file"
-            accept=".json,application/json" /></label
-        ><label for="dataset-json">Or paste dataset JSON</label
-        ><textarea
-          id="dataset-json"
-          rows="10"
-          spellcheck="false"
-          placeholder='{"name":"My corpus","documents":[{"id":"d1","text":"Battery health report"}],"queries":[{"id":"q1","text":"battery","relevant_ids":["d1"]}]}'
-        ></textarea>
-        <p class="import-help">
-          Up to 1,000 documents, 100 labeled queries, and 2 MiB per import.
-          <a href="/demo.json" download="retrieval-lab-example.json"
-            >Download an example</a
-          >.
-        </p>
-        <p id="import-error" role="alert" hidden></p>
-        <div class="dialog-actions">
-          <button type="button" class="button secondary" id="cancel-import">
-            Cancel</button
-          ><button type="submit" class="button primary" id="save-import">
-            Import dataset
-          </button>
-        </div>
-      </form>
-    </dialog>
+      </section>
+    </main>
+    <footer class="site-footer page-width">
+      <div>
+        <a href="/" class="brand" aria-label="RetrievalLab home"
+          ><span class="brand-mark" aria-hidden="true">r<span>l</span></span
+          >RetrievalLab</a
+        >
+        <p>Built for experiments you can inspect.</p>
+      </div>
+      <nav aria-label="Footer">
+        <a href="/workspace">Workbench</a
+        ><a
+          href="https://github.com/ryanfer123/RetrievalLab"
+          target="_blank"
+          rel="noreferrer"
+          >Source & documentation
+          <svg class="icon" aria-hidden="true" viewBox="0 0 24 24" fill="none">
+            <path
+              fill="none"
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="1.5"
+              d="M6 18L18 6M18 15V6H9"
+            /></svg></a
+        ><a href="/home-demo.json" download="retrievallab-home-demo.json"
+          >Demo experiment
+          <svg class="icon" aria-hidden="true" viewBox="0 0 24 24" fill="none">
+            <g
+              fill="none"
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-width="1.5"
+            >
+              <path
+                d="M17 9.00195C19.175 9.01406 20.3529 9.11051 21.1213 9.8789C22 10.7576 22 12.1718 22 15.0002V16.0002C22 18.8286 22 20.2429 21.1213 21.1215C20.2426 22.0002 18.8284 22.0002 16 22.0002H8C5.17157 22.0002 3.75736 22.0002 2.87868 21.1215C2 20.2429 2 18.8286 2 16.0002L2 15.0002C2 12.1718 2 10.7576 2.87868 9.87889C3.64706 9.11051 4.82497 9.01406 7 9.00195"
+              />
+              <path
+                stroke-linejoin="round"
+                d="M12 2L12 15M15 11.5L12 15L9 11.5"
+              />
+            </g></svg
+        ></a>
+      </nav>
+      <p class="footer-note">
+        BM25 / TF-IDF cosine<br />Application by Ryan Fernandes.
+      </p>
+    </footer>
   </body>
 </html>

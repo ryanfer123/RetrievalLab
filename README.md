@@ -1,10 +1,12 @@
 # RetrievalLab
 
-A local web workbench for comparing BM25 and TF-IDF retrieval against your own
+A web workbench for comparing BM25 and TF-IDF retrieval against your own
 relevance judgments. Import documents and labeled questions, run both baselines,
 and inspect the evidence behind every score.
 
-![RetrievalLab workspace](docs/screenshots/desktop.jpg)
+![RetrievalLab homepage](docs/screenshots/home-desktop.png)
+
+[Open the workbench](#run) · [Cloud setup](SUPABASE.md) · [Vercel deployment](DEPLOYMENT.md)
 
 ## What works
 
@@ -12,7 +14,9 @@ and inspect the evidence behind every score.
 - Compare BM25 and TF-IDF cosine at k = 3, 5, 10, or 20.
 - Inspect precision, recall, reciprocal rank, and binary nDCG, averaged across queries.
 - Switch queries to inspect ranked passages and a diagram connecting shared results.
-- Reopen experiments saved in SQLite, including after restarting the app.
+- Reopen local experiments saved in SQLite, including after restarting the app.
+- Optionally sign in and save private cloud copies backed by Supabase row-level security.
+- Restore cloud copies by validating their dataset and recomputing the comparison.
 - Export the complete dataset, labels, parameters, version, SHA256, and measured results.
 - Run an evaluation from the command line without opening the browser.
 
@@ -27,7 +31,9 @@ cd RetrievalLab
 python3 -m retrieval_lab
 ```
 
-Open **http://127.0.0.1:8765**. Click **Try the demo corpus**, then **Run comparison**.
+Open **http://127.0.0.1:8765** for the homepage and its computed sample preview.
+Choose **Open workbench**, or go directly to **http://127.0.0.1:8765/workspace**.
+Click **Try the demo corpus**, then **Run comparison**.
 The bundled demo contains ten hand-authored documents and five labeled questions;
 its scores demonstrate the workflow, not general retrieval quality.
 
@@ -38,9 +44,17 @@ python3 -m retrieval_lab --port 8790 --database experiments.sqlite3
 ```
 
 The app binds to `127.0.0.1`, validates the Host header, and rejects cross-origin
-writes. It is a single-user local application. It has no account system, tenant
-isolation, or internet deployment configuration. SQLite data stays on the machine;
-exports contain the imported text, so review them before sharing.
+writes. In local mode, SQLite data stays on the machine. Optional **Cloud workspaces**
+lets you create/sign in to a Supabase account and save a private copy; only an
+explicit save uploads your experiment. Email confirmation may be required.
+See [cloud setup](SUPABASE.md) for public configuration, per-account RLS policies,
+and session behavior. Cloud restoration validates inputs and recomputes results.
+Exports contain the imported text, so review them before sharing.
+
+The [Vercel configuration](DEPLOYMENT.md) serves the same homepage and workspace
+with stateless Python computation. On the hosted site, work is temporary in the
+browser tab until you save a private cloud copy or export a file. It does not use
+SQLite as shared hosting storage. A banner makes this distinction visible.
 
 ## Import your own corpus
 
@@ -105,7 +119,8 @@ queries, input validation, import/run/export persistence, loopback restrictions,
 and HTTP failures. GitHub Actions runs it on Python 3.10, 3.12, and 3.13.
 
 The frontend has no compilation step. Authored files live in `retrieval_lab/web/`;
-the wheel includes both these files and the vendored browser assets. GSAP animates
+the wheel includes these files, homepage images, and vendored browser assets.
+Vercel uses the separate static build documented in [DEPLOYMENT.md](DEPLOYMENT.md). GSAP animates
 introductory text and ranking connections; Lenis is the only smooth-scroll engine.
 Reduced motion bypasses both effects. Three.js is deliberately omitted because
 ranked evidence is clearer as a lightweight SVG data graphic.

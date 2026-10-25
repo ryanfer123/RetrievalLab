@@ -18,3 +18,23 @@ an illustration of invented results. No photographs, avatars, testimonials,
 third-party company logos, or marketing endorsements are included.
 
 The application source is MIT licensed; the assets above retain their own terms.
+
+## Homepage evidence and assets
+
+`retrieval_lab/web/home-assets/workspace.jpg` is an actual capture of the existing
+RetrievalLab workspace from `docs/screenshots/desktop.jpg`. It shows the bundled
+hand-authored demonstration corpus and is captioned as such; its visible scores
+are not presented as external benchmark results.
+
+The interactive homepage preview is precomputed from `web/demo.json` by the
+production `compare` function at k = 3. The complete input, configuration, dataset
+hash, rankings, and measured results are preserved in `web/home-demo.json`.
+Displayed rankings and metrics were checked against a fresh engine evaluation.
+Latency values are not displayed in the homepage preview.
+
+Homepage icons reuse Solar via the same credited Iconify package. Additional
+icons: `arrow-right-up-linear`, `arrow-down-linear`, `hamburger-menu-linear`,
+`layers-linear`, `document-text-linear`, `sort-horizontal-linear`, `eye-linear`,
+`settings-linear`, and `check-circle-linear`. The original `rl` mark and local
+Manrope, GSAP, ScrollTrigger, and Lenis bundles are reused. No new media provider,
+font CDN, invented testimonial, or third-party company logo is introduced.
